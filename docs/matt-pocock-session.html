@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Windows 五子棋实战会话 · Matt Pocock Skills</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f6f5f1; color: #202820; font: 16px/1.75 system-ui, sans-serif; overflow-wrap: anywhere; }
+    main { max-width: 52rem; margin: auto; padding: 2rem 1rem 3rem; }
+    header { padding-bottom: 1.25rem; border-bottom: 1px solid #d9ded4; }
+    h1, h2 { line-height: 1.3; }
+    h1 { margin: .7rem 0; font-size: clamp(1.8rem, 6vw, 2.8rem); }
+    h2 { margin-top: 0; font-size: 1.4rem; }
+    a { color: #215846; text-underline-offset: .2em; }
+    :focus-visible { outline: 2px solid #215846; outline-offset: 4px; }
+    p { margin: .65rem 0; }
+    code { font-size: .92em; background: #e9ece5; padding: .1em .25em; border-radius: .2em; }
+    .note { margin: 1.2rem 0; padding: .85rem 1rem; background: #fff1d9; border-left: .3rem solid #ad580e; }
+    .note p:last-child, blockquote > :last-child { margin-bottom: 0; }
+    .note p:first-child, blockquote > :first-child { margin-top: 0; }
+    nav { margin-top: 1.2rem; }
+    nav ol { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); gap: .3rem 1.75rem; margin: .5rem 0 0; padding-left: 1.6rem; }
+    section { margin-top: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #d9ded4; }
+    .message { margin: .8rem 0; padding: .85rem 1rem; border: 1px solid #d9ded4; border-radius: .65rem; background: #fff; }
+    .user { background: #edf3e9; }
+    .speaker { display: block; margin-bottom: .3rem; font-size: .88em; color: #405448; }
+    blockquote { margin: 0; }
+    .artifact { margin-top: 1rem; font-size: .94em; }
+    .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: .85rem; margin: 1rem 0; }
+    figure { margin: 0; }
+    img { display: block; width: 100%; height: auto; border: 1px solid #d9ded4; border-radius: .4rem; }
+    figcaption { margin-top: .3rem; font-size: .9em; }
+    footer { margin-top: 1.5rem; }
+  </style>
+</head>
+<body>
+<main id="top">
+  <header>
+    <a href="05-matt-pocock.md">返回第 05 章教程</a>
+    <h1>Windows 五子棋实战会话</h1>
+    <p>2026 年 11 月 24 日 · Codex 桌面客户端 · Set up Matt Pocock skills</p>
+    <p>按原会话顺序摘录的对话，保留关键提问、回复和交付结果。本机路径与工具日志已省略，配图沿用教程中的脱敏截图。每段末尾的「对应产物」可和教程里的文件名对照。</p>
+    <aside class="note" aria-label="跟练顺序纠正">
+      <p><strong>跟练时，把 <code>prototype</code> 提前到 <code>grill-with-docs</code> 之后。</strong> 原会话是先实现，试玩时才发现三个角色不容易区分，随后补做原型。下方保留这段实际顺序，方便回看当时为什么要改界面。</p>
+      <p>推荐在同一对话完成 <code>grill-with-docs</code> → <code>prototype</code> → 选定方案 → <code>to-spec</code> → <code>to-tickets</code>。保存规格和工单后，再按第 05 章选择 Compact 或新开会话，进入实施、排错和复盘。</p>
+    </aside>
+    <nav aria-label="原会话目录">
+      <strong>按原会话顺序跳转</strong>
+      <ol>
+        <li><a href="#setup">配置项目</a></li>
+        <li><a href="#grill">问清五子棋规则</a></li>
+        <li><a href="#spec">停下提前实施并写规格</a></li>
+        <li><a href="#tickets">拆工单，经历上下文压缩</a></li>
+        <li><a href="#implement">授权实施，交付首版</a></li>
+        <li><a href="#prototype">补做原型，选择 A 版</a></li>
+        <li><a href="#bug">复现并修复关窗续局</a></li>
+        <li><a href="#retro">复盘并改进发布流程</a></li>
+      </ol>
+    </nav>
+  </header>
+
+  <section id="setup">
+    <h2>配置项目 · <code>setup-matt-pocock-skills</code></h2>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote><code>$setup-matt-pocock-skills</code></blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · 摘录</strong>
+      <blockquote>I recommend <strong>local Markdown</strong> under <code>.scratch/</code>. Is that where you want to track issues for this project?</blockquote>
+    </div>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote>使用<strong>local Markdown</strong></blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex</strong>
+      <blockquote>
+        <p>已选用本地 Markdown，议题和规格文档放在 <code>.scratch/</code> 下。</p>
+        <p>要保留默认的五个 triage 标签吗？建议保留 <code>needs-triage</code>、<code>needs-info</code>、<code>ready-for-agent</code>、<code>ready-for-human</code> 和 <code>wontfix</code>。</p>
+      </blockquote>
+    </div>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote>都保留</blockquote>
+    </div>
+    <p>Codex 接着展示配置草稿，用户确认把入口写入仓库根目录。</p>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote>使用<code>AGENTS.md</code></blockquote>
+    </div>
+    <p class="artifact"><strong>对应产物</strong>　<code>AGENTS.md</code> 指向 <code>docs/agents/</code> 下的追踪方式、标签和领域文档约定。这个案例选择了本地工单，因此后面的规格和工单都写进 <code>.scratch/</code>。</p>
+  </section>
+
+  <section id="grill">
+    <h2>问清五子棋规则 · <code>grill-with-docs</code></h2>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote>
+        <p><code>$grill-with-docs</code> 开发一个五子棋双人对战小游戏，打包为可在Windows上直接运行的单文件可执行程序（.exe），双击即可启动，无需安装任何依赖。</p>
+        <p>功能需求：</p>
+        <ol>
+          <li>双人对战模式：两名玩家在不同设备上轮流落子（先实现同一局域网对战，留出接口，后续会实现异地对战）。</li>
+          <li>创建房间：支持创建房间，生成房间标识，供另一名玩家加入对局。</li>
+          <li>人机匹配：支持与电脑AI对战，玩家可与AI自动匹配开始对局。</li>
+          <li>难度调整：提供多个AI难度等级（如简单、普通、困难），玩家可自由切换，难度等级需影响AI的决策水平。</li>
+        </ol>
+        <p>界面与体验要求：</p>
+        <ul>
+          <li>棋盘采用标准15×15网格，落子位置清晰，支持落子提示与胜负判定。</li>
+          <li>界面简洁易用，包含当前轮到谁、重新开始、悔棋/退出等基础操作。</li>
+          <li>对局结束后显示胜负结果，并支持快速开启新对局。</li>
+        </ul>
+        <p>请给出完整的项目结构、核心代码实现与打包方案的说明。</p>
+      </blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · 第一轮摘录</strong>
+      <blockquote>
+        <p><strong>Q2 · 加入房间</strong><br>是否接受复制粘贴一条房间邀请？建议房主点击「创建房间」后获得一条可复制的邀请，其中包含局域网地址和房间码。客人粘贴一次即可加入，双方使用同一个程序。</p>
+        <p><strong>Q4 · 人机难度</strong><br>是否采用开局即匹配、对局中可切换的方式？建议点击「人机对战」即可开局，玩家默认执黑。简单档偏随机，普通档会识别一步成五和挡五，困难档会搜索后续攻防。切换难度从下一次 AI 落子起生效。</p>
+      </blockquote>
+    </div>
+    <div class="message user">
+      <strong class="speaker">用户 · 第一轮摘录</strong>
+      <blockquote>
+        <p>Q2:房主创建房间，再同一个局域网内，其他玩家可以看到这个房间，进入房间后默认在观众席，可以选择上席参与对战或者在观众席观看，观众席默认设置5个，观众可以发送悬浮弹幕从画面顶层滚过，只做内容展示，不抢占操作焦点</p>
+        <p>Q4:创建房间可以选择人机难度，对局中不可以切换</p>
+        <p>补充一个内容，创建房间可以选择断网处理方式，直接终止比赛或者超时等待连接15s到3mins之内，默认30s，玩家返回就继续参与对局，双方都离开则游戏结束</p>
+      </blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · 第二轮摘录</strong>
+      <blockquote>
+        <p><strong>Q7 · 双人房入座</strong><br>房主创建双人房后默认坐黑席，可以吗？建议其他玩家先进入观众席，再自行选择空席。两席坐满后由房主开始。观众席默认 <strong>5 个</strong>，创建时可调整。观众席满时，新人等有空位再入房，断线玩家仍可返回自己保留的对战席。</p>
+        <p><strong>Q9 · 断线与主动退出</strong><br>是否把主动退出视为中止当前对局？建议点退出即中止。意外断线按房间设置处理，选择等待时暂停落子，玩家在期限内自动回到原座位和原棋盘，超时则中止。房主程序保持开着时，房主网络恢复后也能续局。房主关闭程序时房间解散，中止的对局不判胜负。</p>
+      </blockquote>
+    </div>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote>全部同意</blockquote>
+    </div>
+    <p class="artifact"><strong>对应产物</strong>　<code>GLOSSARY.md</code> 把「对战席」和「观众席」定为后续规格和测试共同使用的术语。第二轮的退出规则后来因实际试玩而修订，见<a href="#bug">续局排错</a>。</p>
+  </section>
+
+  <section id="spec">
+    <h2>停下提前实施并写规格 · <code>to-spec</code></h2>
+    <p>上一轮答完「全部同意」后，Codex 提前开始了实现。用户打断了这一轮，并明确要求先审规格。</p>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote><code>$to-spec</code> 如果有创建代码就先删除，确定方案等我同意再写代码</blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · 摘录</strong>
+      <blockquote>
+        <p>已删除上一轮新增的源码、项目文件和 <code>.gitignore</code>，并确认项目里没有构建产物。<code>src</code> 目录已为空。</p>
+        <p>请确认规格和验收方式。<strong>收到你的明确同意后，我才会编写代码、构建和打包。</strong></p>
+      </blockquote>
+    </div>
+    <p class="artifact"><strong>对应产物</strong>　<code>.scratch/gomoku/spec.md</code> 记录了 38 条用户故事和验收方式。比如用房间会话检查规则和断线行为，用发布版 <code>.exe</code> 验证双击启动及观战。</p>
+  </section>
+
+  <section id="tickets">
+    <h2>拆工单与压缩上下文 · <code>to-tickets</code></h2>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote><code>$to-tickets</code></blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · 摘录</strong>
+      <blockquote>
+        <p><strong>单文件启动并完成人机首局</strong>（无阻塞）<br>双击 Windows <code>.exe</code>，进入简单人机对局。支持 15×15 棋盘、落子提示、胜负与和棋判定、直接悔棋、重开和退出。</p>
+        <p>这 8 张的粒度和依赖是否合适？有需要合并、拆分或调整依赖的工单，可以直接指出编号。确认后逐张发布到本地追踪器。<strong>工单发布后，开工仍以你对规格的明确确认为准。</strong></p>
+      </blockquote>
+    </div>
+    <p>会话此时记录了一次上下文压缩。压缩前八张工单还在草拟阶段，压缩后仍在同一对话。</p>
+    <div class="message user">
+      <strong class="speaker">用户 · 压缩后第一次发出实施指令</strong>
+      <blockquote><code>$implement-spec</code> 开始执行<code>spec.md</code></blockquote>
+    </div>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote>确定</blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · 摘录</strong>
+      <blockquote>
+        <p>已按确认的拆分创建 8 张五子棋工单，每张一份本地 Markdown，状态均为 <code>ready-for-agent</code>。已核对全部依赖和 36 项验收标准。</p>
+        <p>本次确认用于发布工单。开发、构建和打包仍等待你明确批准五子棋规格。</p>
+      </blockquote>
+    </div>
+    <p class="artifact"><strong>对应产物</strong>　<code>.scratch/gomoku/issues/</code> 下有八份 Markdown。<code>01-play-first-ai-match.md</code> 无前置依赖，<code>07-disconnect-and-rejoin.md</code> 则等实时观战工单完成。</p>
+  </section>
+
+  <section id="implement">
+    <h2>授权实施，交付首版 · <code>implement-spec</code></h2>
+    <div class="message user">
+      <strong class="speaker">用户 · 工单发布后重新发送</strong>
+      <blockquote><code>$implement-spec</code> 开始执行<code>spec.md</code></blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · 摘录</strong>
+      <blockquote>工作区目前只有规格和工单。我会建立本地 Git 集成分支，从单文件启动和人机首局开始。</blockquote>
+    </div>
+    <p>实施过程中会话中断。用户恢复会话后，Codex 继续完成核对并交付首版。</p>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote><code>continue</code></blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · 首版验收摘录</strong>
+      <blockquote>
+        <p>支持 15×15 五子棋、局域网自动发现和双人对战、三档人机、实时观战与弹幕。双人悔棋和重开需对手确认。开房时可选断线立即中止，或等待 15–180 秒，默认 30 秒。中止后可以在原房间补位开下一局。</p>
+        <p>Release 构建零警告，32 项自动化检查全部通过。同机三个发布版实例走通了对战、观战、弹幕焦点、悔棋、重开及断线恢复。</p>
+      </blockquote>
+    </div>
+    <p class="artifact"><strong>对应产物</strong>　整份规格的实现合入 <code>gomoku-integration</code>，可试玩文件是 <code>dist/win-x64/Gomoku.exe</code>。如果只想跟做一张 Issue，第 05 章提供了用 <code>implement</code> 执行工单 01 的示例。</p>
+  </section>
+
+  <section id="prototype">
+    <h2>补做原型，选择 A 版 · <code>prototype</code></h2>
+    <aside class="note" aria-label="原型顺序纠正">
+      <p><strong>这一步在原会话用晚了。</strong> 当时首版已交付，试玩后才提出辨认角色的问题。跟练时，在 <a href="#grill"><code>grill-with-docs</code></a> 问清角色与操作后做原型，选定布局，再交给 <code>to-spec</code> 和 <code>to-tickets</code>。这样身份卡、轮次和弹幕入口可以进入规格与首版验收。</p>
+    </aside>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote>
+        <p><code>$prototype</code></p>
+        <p>两位对战玩家和观众席区分不明显，对应UI修改一下，例如白棋需要有一个白棋UI，黑棋也类似，观众就显示一个观众的UI，你出三版UI给我看看，我选择一个看看</p>
+      </blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · 摘录</strong>
+      <blockquote>
+        <p><strong>A · 棋室侧栏</strong>　保留左棋盘、右操作区，用黑棋、白棋和观众三种大身份卡标明当前视角。</p>
+        <p><strong>B · 双席对阵</strong>　黑白棋各占棋盘一侧，明确标出「你的席位」。观众有独立的底部观战区和弹幕入口。</p>
+        <p><strong>C · 沉浸棋盘</strong>　棋盘居中，顶部显示身份和轮次，底部随角色显示对战操作或弹幕输入。</p>
+        <p>这次交付的是浏览器原型，Windows 版等你选定后再实现。回复 <strong>A、B 或 C</strong>，也可以指定想组合的部分。</p>
+      </blockquote>
+    </div>
+    <div class="gallery">
+      <figure>
+        <a href="images/gomoku-prototype-a.png"><img src="images/gomoku-prototype-a.png" alt="A 版原型，棋盘右侧有执黑身份卡与席位列表" width="1040" height="521" loading="lazy"></a>
+        <figcaption>A · 棋室侧栏</figcaption>
+      </figure>
+      <figure>
+        <a href="images/gomoku-prototype-b.png"><img src="images/gomoku-prototype-b.png" alt="B 版原型，黑白身份卡分列棋盘两侧" width="1040" height="478" loading="lazy"></a>
+        <figcaption>B · 双席对阵</figcaption>
+      </figure>
+      <figure>
+        <a href="images/gomoku-prototype-c.png"><img src="images/gomoku-prototype-c.png" alt="C 版原型，棋盘居中，身份与轮次显示在顶部" width="1040" height="560" loading="lazy"></a>
+        <figcaption>C · 沉浸棋盘</figcaption>
+      </figure>
+    </div>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote>A</blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · Windows 版交付摘录</strong>
+      <blockquote>已把 <strong>A 版「棋室侧栏」</strong> 做进 Windows 版。黑棋、白棋和观众各有独立身份卡，席位列表会高亮当前落子方并显示观众人数。观众可以在侧栏发送弹幕。</blockquote>
+    </div>
+    <div class="gallery">
+      <figure>
+        <a href="images/gomoku-windows-black.png"><img src="images/gomoku-windows-black.png" alt="Windows 实机黑棋视角，右侧显示执黑身份和当前轮次" width="762" height="492" loading="lazy"></a>
+        <figcaption>Windows 版 · 黑棋视角</figcaption>
+      </figure>
+      <figure>
+        <a href="images/gomoku-windows-spectator.png"><img src="images/gomoku-windows-spectator.png" alt="Windows 实机观众视角，右侧显示观众身份和弹幕输入" width="762" height="492" loading="lazy"></a>
+        <figcaption>Windows 版 · 观众视角</figcaption>
+      </figure>
+    </div>
+    <p class="artifact"><strong>对应产物</strong>　原项目的浏览器原型是 <code>src/Gomoku.App/LanMatchView.prototype.html</code>，归档在 <code>codex/gomoku-room-ui-prototype</code> 分支。选中 A 后，Windows 发布包才换成侧栏版。</p>
+  </section>
+
+  <section id="bug">
+    <h2>复现并修复关窗续局 · <code>diagnosing-bugs</code></h2>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote>
+        <p><code>$diagnosing-bugs</code></p>
+        <ol><li>中途有玩家退出游戏，再返回游戏，不能继续下棋，我没测试观众，需要你自测一下试试</li></ol>
+      </blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · 修复结果摘录</strong>
+      <blockquote>
+        <p>房主保持在线且房间选了「等待重连」时，访客棋手点「退出房间」或关闭窗口后，用原设备和同一 Windows 账户在等待期内重新加入，就能恢复原席、棋盘和轮次。默认等待 30 秒。两种退出方式都实测能继续落子，观众席满时也能回原席。「立即中止」或等待超时会结束本局，房主关窗会解散房间。</p>
+        <p>实测观众退出房间或关窗期间，两名棋手可以继续落子。观众回来后能同步棋盘、看到后续落子，发出的弹幕也正常出现在房主棋盘上。</p>
+      </blockquote>
+    </div>
+    <p class="artifact"><strong>对应产物</strong>　工单 <code>07-disconnect-and-rejoin.md</code> 留下修复和复测结果。后续复盘把关窗退出、重新入房到继续落子的检查纳入仓库，入口是 <code>tests/Windows/smoke.ps1</code> 的 <code>GuestClose</code> 场景。</p>
+  </section>
+
+  <section id="retro">
+    <h2>复盘并改进发布流程 · <code>retro</code></h2>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote><code>$retro</code></blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · 建议摘录</strong>
+      <blockquote>
+        <p><strong>高｜把 Windows 回归脚本纳入仓库。</strong> 现有 32 项检查覆盖核心层。关窗重开后能否回原席落子、观众回来后能否看到新落子和发送弹幕，目前靠工作站上的脚本验证。</p>
+        <p><strong>中｜在规格里明确何时开工、如何验收。</strong> 本次有一轮代码在规格确认前写入，随后撤回。用户要求先审方案时，可在现有规格里记录实现是否已获授权。联机行为则用一张表列清访客、房主、观众分别在点退出、关窗、断网时的预期结果。本次续局返工正好涉及这些区别。</p>
+      </blockquote>
+    </div>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote>开始执行</blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · 落地结果摘录</strong>
+      <blockquote><strong>发布回归已纳入仓库。</strong> <code>scripts/publish.ps1</code> 会在核心检查和真实窗口回归通过后替换发行包，再校验 SHA-256。本次 32 项核心检查和 9 个窗口场景全部通过，最终发行包也复测了关窗续局。</blockquote>
+    </div>
+    <p class="artifact"><strong>对应产物</strong>　<code>.githooks/pre-commit</code> 接入提交检查，<code>scripts/publish.ps1</code> 把验收接进发布，<code>spec.md</code> 补记实施授权及退出行为。发布工单 08 仍保留两项人工验收，两台实体设备的局域网联测，以及未额外安装 .NET 的 Windows 11 启动。</p>
+  </section>
+
+  <footer>
+    <a href="#top">回到会话目录</a> · <a href="05-matt-pocock.md">返回第 05 章跟练</a>
+  </footer>
+</main>
+</body>
+</html>

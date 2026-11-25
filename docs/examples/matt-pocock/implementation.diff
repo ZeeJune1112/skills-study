@@ -1,0 +1,56 @@
+diff --git a/todos.mjs b/todos.mjs
+--- a/todos.mjs
++++ b/todos.mjs
+@@ -1,9 +1,14 @@
+ import { readFileSync } from 'node:fs';
+ 
+ const todos = JSON.parse(readFileSync(new URL('./todos.json', import.meta.url), 'utf8'));
++const activeOnly = process.argv.slice(2).includes('--active');
++const visibleTodos = activeOnly ? todos.filter((todo) => todo.completed === false) : todos;
+ 
+ console.log('待办清单');
+-for (const todo of todos) {
++if (activeOnly && visibleTodos.length === 0) {
++  console.log('没有未完成任务');
++}
++for (const todo of visibleTodos) {
+   const mark = todo.completed ? 'x' : ' ';
+   console.log(`[${mark}] ${todo.title}`);
+ }
+diff --git a/todos.test.mjs b/todos.test.mjs
+--- a/todos.test.mjs
++++ b/todos.test.mjs
+@@ -1,5 +1,8 @@
+ import assert from 'node:assert/strict';
+ import { execFileSync } from 'node:child_process';
++import { copyFileSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
++import { tmpdir } from 'node:os';
++import { join } from 'node:path';
+ import { test } from 'node:test';
+ import { fileURLToPath } from 'node:url';
+ 
+@@ -15,3 +18,24 @@ test('默认按顺序列出已完成和未完成的任务', () => {
+     '[ ] 完成 Skills 实战',
+   ]);
+ });
++
++test('--active 按原顺序只列出未完成待办', () => {
++  const output = execFileSync(process.execPath, [entry, '--active'], { encoding: 'utf8' });
++  const [, ...items] = output.trim().split(/\r?\n/);
++
++  assert.deepEqual(items, ['[ ] 读懂 Git 差异', '[ ] 完成 Skills 实战']);
++});
++
++test('--active 在所有待办都完成时显示空结果提示', (context) => {
++  const fixture = mkdtempSync(join(tmpdir(), 'todo-workshop-'));
++  context.after(() => rmSync(fixture, { recursive: true, force: true }));
++
++  const fixtureEntry = join(fixture, 'todos.mjs');
++  copyFileSync(entry, fixtureEntry);
++  writeFileSync(join(fixture, 'todos.json'), JSON.stringify([
++    { title: '安装 Codex', completed: true },
++  ]));
++
++  const output = execFileSync(process.execPath, [fixtureEntry, '--active'], { encoding: 'utf8' });
++  assert.deepEqual(output.trim().split(/\r?\n/), ['待办清单', '没有未完成任务']);
++});
