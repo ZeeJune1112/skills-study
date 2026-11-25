@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="src/Gomoku.Core/Gomoku.Core.csproj" />
+  <Project Path="src/Gomoku.App/Gomoku.App.csproj" />
+  <Project Path="tests/Gomoku.Checks/Gomoku.Checks.csproj" />
+</Solution>

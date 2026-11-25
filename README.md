@@ -6,6 +6,8 @@
 
 **想先试玩成品？** [下载五子棋 Gomoku.exe](https://github.com/ZeeJune1112/skills-study/releases/download/gomoku-demo/Gomoku.exe)。适用于 Windows 11 x64，双击运行，无需额外安装 .NET。可以先开一局人机，再回到第 05 章跟练。
 
+**想改一改五子棋？** [查看五子棋源工程](projects/gomoku)。下载或克隆仓库后，进入 `projects/gomoku`，按[源码运行、测试与打包说明](projects/gomoku/README.md#构建与发布)修改代码并生成自己的 `Gomoku.exe`。工程也附有第 05 章对应的[规格](projects/gomoku/.scratch/gomoku/spec.md)和[工单](projects/gomoku/.scratch/gomoku/issues)。
+
 ```mermaid
 flowchart LR
     install["安装并建立练习仓库"] --> cli["CLI：读代码、改一行"]
