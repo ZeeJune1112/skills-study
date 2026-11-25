@@ -2,6 +2,10 @@
 
 先用 Windows 待办项目练 **Codex CLI**、**Sourcetree** 和 **Worktree**，学会读代码、看差异和隔离改动。最后在桌面客户端跟练真实的五子棋案例，用 Matt Pocock 的 skills 选原型、写规格、拆工单、实施和复盘。
 
+**觉得文字版不好跟？** [下载完整 HTML 教程](https://github.com/ZeeJune1112/skills-study/releases/download/gomoku-demo/skills-study-tutorial.html)，双击用浏览器打开。里面有第 01–05 章、Git 与 Worktree、操作截图，以及脱敏的五子棋实战对话节选。
+
+**想先试玩成品？** [下载五子棋 Gomoku.exe](https://github.com/ZeeJune1112/skills-study/releases/download/gomoku-demo/Gomoku.exe)。适用于 Windows 11 x64，双击运行，无需额外安装 .NET。可以先开一局人机，再回到第 05 章跟练。
+
 ```mermaid
 flowchart LR
     install["安装并建立练习仓库"] --> cli["CLI：读代码、改一行"]

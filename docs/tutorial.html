@@ -1,0 +1,921 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Codex 与 Matt Pocock Skills 入门 · 图文教程</title>
+  <style>
+    * { box-sizing: border-box; }
+    html { scroll-padding-top: 1rem; }
+    body { margin: 0; background: #f6f5f1; color: #202820; font: 16px/1.75 system-ui, sans-serif; overflow-wrap: anywhere; }
+    a { color: #215846; text-underline-offset: .2em; }
+    a:focus-visible { outline: 2px solid #215846; outline-offset: 4px; }
+    p { margin: .65rem 0; }
+    h1, h2, h3, h4 { line-height: 1.3; }
+    h1 { margin: 0 0 .7rem; font-size: clamp(1.9rem, 5.5vw, 3rem); }
+    h2 { margin: 0 0 1rem; font-size: clamp(1.4rem, 3.5vw, 2rem); }
+    h3 { margin: 1.6rem 0 .6rem; font-size: 1.25rem; }
+    .masthead { background: #213c32; color: #fff; padding: 2rem max(1rem, calc((100% - 72rem) / 2)); }
+    .masthead p { max-width: 58ch; color: #e0eee6; }
+    .masthead a { display: inline-block; color: #fff; margin: .4rem 1rem 0 0; }
+    .masthead a:focus-visible { outline-color: #fff; }
+    .layout { max-width: 74rem; margin: 0 auto; padding: 1rem; }
+    .contents { background: #ecf1e9; border: 1px solid #ccd8cc; padding: .8rem 1rem; border-radius: .6rem; margin-bottom: 1rem; }
+    .contents a { display: block; padding: .25rem 0; }
+    .chapter { margin-bottom: 1rem; padding: clamp(1rem, 3.5vw, 2.25rem); border: 1px solid #d9ded4; border-radius: .75rem; background: #fff; }
+    .chapter > :last-child, .message blockquote > :last-child, .note p:last-child { margin-bottom: 0; }
+    code { background: #edf0ea; border-radius: .2em; padding: .1em .24em; font: .92em/1.5 ui-monospace, Consolas, monospace; }
+    pre { max-width: 100%; overflow-x: auto; background: #20312a; color: #f6f8f5; padding: .85rem 1rem; border-radius: .5rem; }
+    pre code { background: transparent; padding: 0; }
+    ol, ul { padding-left: 1.65rem; }
+    li + li { margin-top: .3rem; }
+    table { display: block; max-width: 100%; overflow-x: auto; border-collapse: collapse; margin: 1rem 0; }
+    th, td { min-width: 6rem; text-align: left; vertical-align: top; padding: .45rem .65rem; border: 1px solid #d9ded4; }
+    th { background: #ecf1e9; }
+    img { display: block; max-width: 100%; height: auto; border: 1px solid #d9ded4; border-radius: .4rem; }
+    blockquote { margin: 1rem 0; padding: .25rem .85rem; border-left: .2rem solid #b3c8ba; background: #f5f8f4; }
+    .transcript section { border-top: 1px solid #d9ded4; padding-top: .8rem; margin-top: 1.4rem; }
+    .transcript h3 { margin-top: .25rem; }
+    .note { margin: 1rem 0; padding: .75rem .9rem; background: #fff1d9; border-left: .28rem solid #ad580e; }
+    .note p:first-child, .message blockquote > :first-child { margin-top: 0; }
+    .message { margin: .7rem 0; padding: .8rem .95rem; border: 1px solid #d9ded4; border-radius: .55rem; }
+    .user { background: #edf3e9; }
+    .speaker { display: block; color: #405448; font-size: .88em; margin-bottom: .3rem; }
+    .message blockquote { margin: 0; border: 0; background: transparent; padding: 0; }
+    .artifact, figcaption { font-size: .94em; }
+    .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); gap: .85rem; margin: 1rem 0; }
+    figure { margin: 0; }
+    figcaption { margin-top: .3rem; }
+    footer { margin-top: 1rem; }
+    @media (min-width: 54rem) {
+      .layout { display: grid; grid-template-columns: 12rem minmax(0, 1fr); gap: 1.25rem; align-items: start; padding-top: 1.5rem; }
+      .contents { position: sticky; top: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="masthead" id="top">
+    <h1>Codex 与 Matt Pocock Skills 入门</h1>
+    <p>先用待办清单练 CLI、Sourcetree 和 Worktree，再用桌面客户端完成五子棋实战。从目录选一章，或直接对照实战里的原话和截图。</p>
+    <a href="#install">从第 01 章开始</a>
+    <a href="#session">看实战对话</a>
+    <a href="https://github.com/ZeeJune1112/skills-study/releases/download/gomoku-demo/Gomoku.exe">下载五子棋 EXE</a>
+  </header>
+  <div class="layout">
+    <nav class="contents" aria-label="教程目录">
+      <strong>教程目录</strong>
+      <a href="#install">01 安装与准备</a>
+      <a href="#cli">02 CLI 常用指令</a>
+      <a href="#git-worktrees">Git 与 Worktree</a>
+      <a href="#configuration">03 配置与 Magpie</a>
+      <a href="#computer-use">04 Computer Use</a>
+      <a href="#matt-pocock">05 五子棋实战</a>
+      <a href="#session">实战会话节选</a>
+    </nav>
+    <main>
+<section class="chapter" id="install">
+<h2 id="install--01-安装打开同一个练习">01 安装，打开同一个练习</h2>
+<p>后面的章节会明确区分三个输入位置。<strong>PowerShell</strong> 运行 <code>git</code>、<code>node</code>、<code>codex</code> 等命令。运行 <code>codex</code> 后，你进入 <strong>Codex CLI</strong>，在里面输入 <code>/status</code> 或用中文描述任务。<strong>桌面客户端</strong>指 ChatGPT 桌面应用里的 Codex 界面，在聊天输入框发送提示词。</p>
+<h3 id="install--安装-cli">安装 CLI</h3>
+<ol>
+<li>
+<p>从官方渠道安装 <a href="https://git-scm.com/install/windows">Git for Windows</a>、<a href="https://www.sourcetreeapp.com/">Sourcetree</a> 和 <a href="https://nodejs.org/en/download">Node.js</a>。安装后，新开一个 PowerShell 窗口。</p>
+</li>
+<li>
+<p>在 PowerShell 运行下面的命令。前三条分别检查 Git、Node.js 和 npm，第四条安装 CLI。</p>
+<pre><code class="language-powershell">git --version
+node --version
+npm --version
+npm install -g @openai/codex
+codex --version
+</code></pre>
+</li>
+<li>
+<p>运行 <code>codex</code>，首次打开时按界面提示选择使用 ChatGPT 登录。登录完成后，可在 Codex CLI 输入 <code>/quit</code> 回到 PowerShell。</p>
+</li>
+</ol>
+<p>安装后若提示找不到命令，先关闭并重开 PowerShell。若 PowerShell 明确提示 npm 安装的 <code>codex.ps1</code> 无法运行，可试 <code>codex.cmd --version</code> 和 <code>codex.cmd</code>。相关入口见 <a href="https://learn.chatgpt.com/docs/codex/cli">Codex CLI 官方指南</a>。</p>
+<h3 id="install--安装桌面客户端">安装桌面客户端</h3>
+<p>在 <a href="https://learn.chatgpt.com/docs/windows/windows-app">Windows 桌面应用官方指南</a> 下载并安装 ChatGPT 桌面应用，登录后从 ChatGPT 下拉菜单选择 <strong>Codex</strong>。先用 CLI 做基础练习。在第 04 章体验 Computer Use，或到第 05 章用 <strong>Add new project</strong>（<code>Ctrl+O</code>）打开同一个练习目录。</p>
+<pre><code class="language-mermaid">flowchart LR
+    shell[&quot;PowerShell 运行 codex&quot;] --&gt; terminal[&quot;CLI 输入 /status 与任务&quot;]
+    app[&quot;桌面客户端选择 Codex&quot;] --&gt; chat[&quot;本地项目里发消息&quot;]
+    terminal --&gt; workshop[&quot;同一个 todo-workshop 文件夹&quot;]
+    chat --&gt; workshop
+</code></pre>
+<h3 id="install--准备独立的待办练习">准备独立的待办练习</h3>
+<p>如果你在 GitHub 上看教程，回到仓库首页选择 <strong>Code → Download ZIP</strong>，解压后找到含有 <code>README.md</code> 和 <code>practice</code> 的目录。在 PowerShell 用 <code>Set-Location</code> 进入它，路径含空格时用引号包起来，可以从资源管理器复制路径。</p>
+<p>运行 <code>Get-ChildItem</code> 确认位置。下面的命令把练习复制到一个单独的文件夹，然后显示路径。若提示 <code>todo-workshop</code> 已存在，把目录名换成一个未使用的名字后再运行。</p>
+<pre><code class="language-powershell">$workshop = Join-Path $env:USERPROFILE 'todo-workshop'
+if (Test-Path -LiteralPath $workshop) { throw 'todo-workshop 已存在，请换一个目录名。' }
+Copy-Item -LiteralPath .\practice -Destination $workshop -Recurse -ErrorAction Stop
+Set-Location -LiteralPath $workshop
+Get-Location
+</code></pre>
+<p>打开 <a href="https://gcn3z3rurfcz.feishu.cn/wiki/DLA9wWr8Li77OYkwOcxc4YD9n1b">Sourcetree 教程总结（飞书）</a>，并在 Sourcetree 新标签页用 <strong>Create</strong> 在刚才的目录创建本地 Git 仓库。若 Create 无法选中已有目录，在这个目录运行 <code>git init</code>，再回 Sourcetree 用 <strong>Add</strong> 打开。</p>
+<p>在 <strong>File Status</strong> 中只选 <code>todos.mjs</code>、<code>todos.test.mjs</code> 和 <code>todos.json</code>，确认三项都出现在 <strong>Staged files</strong>，填写 <code>Save todo exercise baseline</code> 后点 <strong>Commit</strong>。暂存就是选定哪些改动进入下一次提交。在 <strong>Log / History</strong> 看到这条提交就完成了，提交记录保存在本机。界面操作可参照 <a href="https://support.atlassian.com/sourcetree/kb/viewing-file-status-of-a-repository/">Atlassian 的 File Status 说明</a>。</p>
+<p>回到 PowerShell，运行以下命令。预期程序打印三条待办，测试末尾有 <code>pass 1</code> 和 <code>fail 0</code>。</p>
+<pre><code class="language-powershell">node .\todos.mjs
+node --test
+</code></pre>
+<pre><code class="language-text">待办清单
+[x] 安装 Codex
+[ ] 读懂 Git 差异
+[ ] 完成 Skills 实战
+</code></pre>
+<p>在 PowerShell 运行 <code>Get-Location</code> 确认当前位置，然后运行 <code>codex</code>。在 Codex CLI 输入 <code>/status</code>，看 <code>Directory</code> 是否指向 <code>todo-workshop</code>。下面是独立演示环境中实际的 CLI 画面，模型名为示例，目录和会话 ID 已遮挡。</p>
+<p><img src="images/cli-status.png" alt="Codex CLI 的 /status 输出，包含版本、目录和只读权限，目录和会话 ID 已打码" /></p>
+<p>确认目录后，进入 <a href="#cli">02 CLI 最常用的指令</a>。</p>
+</section>
+
+<section class="chapter" id="cli">
+<h2 id="cli--02-cli-最常用的指令">02 CLI 最常用的指令</h2>
+<p>在 PowerShell 回到 <code>todo-workshop</code>。先运行 <code>Get-Location</code> 确认位置，再运行 <code>codex</code>。下面这些带 <code>/</code> 的指令输在 <strong>Codex CLI 的输入框</strong>。</p>
+<table>
+<thead>
+<tr>
+<th>输入</th>
+<th>何时用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/status</code></td>
+<td>核对会话目录、模型和权限信息</td>
+</tr>
+<tr>
+<td><code>/permissions</code></td>
+<td>查看或切换权限，第一次读代码可选 <strong>Read Only</strong></td>
+</tr>
+<tr>
+<td><code>/model</code></td>
+<td>查看并选择当前对话可用的模型</td>
+</tr>
+<tr>
+<td><code>/mention</code></td>
+<td>把指定文件带入提示词，例如选中 <code>todos.mjs</code></td>
+</tr>
+<tr>
+<td><code>/plan</code></td>
+<td>开工前先让 Codex 给方案，确认范围和验收步骤</td>
+</tr>
+<tr>
+<td><code>/diff</code></td>
+<td>看当前工作区的文件改动</td>
+</tr>
+<tr>
+<td><code>/review</code></td>
+<td>请求 Codex 审查尚未提交的改动</td>
+</tr>
+<tr>
+<td><code>/new</code>、<code>/resume</code></td>
+<td>开一段新对话，或接着做已有对话的任务</td>
+</tr>
+<tr>
+<td><code>/worktree</code></td>
+<td>让一个任务在独立目录里改代码，见 <a href="#git-worktrees">Git 与 Worktree</a></td>
+</tr>
+<tr>
+<td><code>/skills</code></td>
+<td>浏览可用的 skills，也可输入 <code>$</code> 选择</td>
+</tr>
+<tr>
+<td><code>/quit</code></td>
+<td>返回 PowerShell</td>
+</tr>
+</tbody>
+</table>
+<p>输入 <code>/</code> 可打开本机版本的命令列表。界面和选项名称以本机版本为准。参见 <a href="https://learn.chatgpt.com/docs/developer-commands?surface=cli">CLI 斜杠指令</a>。</p>
+<h3 id="cli--从读代码到改一行">从读代码到改一行</h3>
+<p>先在只读权限下用 <code>/mention</code> 选 <code>todos.mjs</code>，再发送下面这段。</p>
+<pre><code class="language-text">请看 todos.mjs、todos.json 和 todos.test.mjs。说清待办数据在哪里、如何打印、如何运行测试。不修改文件。
+</code></pre>
+<p>核对它是否指出 <code>todos.json</code> 是数据、<code>todos.mjs</code> 是入口、<code>node --test</code> 是测试命令。然后用 <code>/permissions</code> 选择 <strong>Ask for approval</strong>，允许写入练习目录、超出权限时请求批准。</p>
+<p><img src="images/cli-permissions.png" alt="Codex CLI 的 /permissions 菜单，包含 Ask for approval 和 Read Only" /></p>
+<p>再发下面这段。</p>
+<pre><code class="language-text">只改 todos.mjs，把列表标题从「待办清单」改成「我的待办清单」。保留三条任务和它们的顺序。运行 node todos.mjs 和 node --test，告诉我实际结果。
+</code></pre>
+<p>输入 <code>/diff</code> 查看差异。也可以用 <code>/review</code> 选审查未提交的改动，得到一份额外检查。</p>
+<p>下面是演示副本中的实际 <code>/diff</code> 画面。<code>-</code> 行是旧标题，<code>+</code> 行是新标题。回到 Sourcetree，打开练习仓库的 <strong>File Status</strong>，点选 <code>todos.mjs</code> 看同一处差异，并检查文件列表里是否只有这一个改动。</p>
+<p><img src="images/cli-diff.png" alt="Codex CLI 的 /diff 显示将「待办清单」改为「我的待办清单」" /></p>
+<p>在 PowerShell 自己验收实际输出，应显示「我的待办清单」，三行任务保持原样，测试通过。</p>
+<pre><code class="language-powershell">node .\todos.mjs
+node --test
+</code></pre>
+<h3 id="cli--练习撤回">练习撤回</h3>
+<p>在 Sourcetree 的 <strong>File Status</strong> 里点开 <code>todos.mjs</code>，确认只有刚做的标题改动。它应还在未暂存区。对这一处差异点 <strong>Discard Hunk</strong>。若版本只有文件级的 <strong>Discard</strong>，先确认该文件里的改动都可丢弃。再运行 <code>node .\todos.mjs</code>，确认回到「待办清单」。<a href="https://support.atlassian.com/sourcetree/kb/viewing-file-status-of-a-repository/">Sourcetree File Status 说明</a></p>
+<p>接下来做 <a href="#git-worktrees">Git 与 Worktree</a>。</p>
+</section>
+
+<section class="chapter" id="git-worktrees">
+<h2 id="git-worktrees--git-与-worktree">Git 与 Worktree</h2>
+<p><a href="https://gcn3z3rurfcz.feishu.cn/wiki/DLA9wWr8Li77OYkwOcxc4YD9n1b">Sourcetree 教程总结（飞书）</a></p>
+<p>在 Sourcetree 打开 <code>todo-workshop</code>，先认清三个入口。<strong>File Status</strong> 看本次改动和要暂存的文件，<strong>Log / History</strong> 看已经保存的提交，<strong>Branches</strong> 看当前开发分支。提交保存本机版本，<strong>Push</strong> 才向远端发布。第 01 章的首个提交在本机就能看到。</p>
+<table>
+<thead>
+<tr>
+<th>你想做什么</th>
+<th>Codex 有什么入口</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>让 Codex 改你正在编辑的这一份文件</td>
+<td>CLI 在原项目目录运行 <code>codex</code>，或在桌面客户端选择 <strong>Local</strong>。</td>
+</tr>
+<tr>
+<td>逐行看它改了什么</td>
+<td>CLI 用 <code>/diff</code>，客户端用 <strong>Review</strong> 面板。也可以在 Sourcetree 查看同一目录的差异。</td>
+</tr>
+<tr>
+<td>请 Codex 按需求检查改动</td>
+<td>输入 <code>/review</code>，选择未提交的改动，或与基础分支比较。</td>
+</tr>
+<tr>
+<td>开一项独立任务</td>
+<td>CLI 用 <code>/worktree</code>，或在 PowerShell 运行 <code>codex --worktree</code>。客户端在新对话选择 <strong>Worktree</strong>。</td>
+</tr>
+<tr>
+<td>把工作树里的成果留下来</td>
+<td>在客户端的工作树用 <strong>Create branch here</strong> 保存到一个有名字的分支，随后提交。要回日常目录接着做，使用 <strong>Hand off → Local</strong> 移动对话与改动。</td>
+</tr>
+<tr>
+<td>暂存、提交或发布</td>
+<td>客户端 <strong>Review</strong> 面板也能暂存、撤回、提交和推送。跟练时用 Sourcetree 完成这些 Git 操作。</td>
+</tr>
+</tbody>
+</table>
+<p><a href="https://learn.chatgpt.com/docs/developer-commands?surface=cli">Codex CLI 指令</a> · <a href="https://learn.chatgpt.com/docs/code-review#review-local-changes">Codex 代码审查</a> · <a href="https://learn.chatgpt.com/docs/environments/git-worktrees">Codex Worktree 官方指南</a></p>
+<h3 id="git-worktrees--用两个目录验证-worktree">用两个目录验证 Worktree</h3>
+<p>分支记录一条开发线。Worktree 是连接到同一 Git 仓库的另一个工作目录。它和原目录共享提交历史与分支信息，各自有一份可编辑的文件。同一个分支默认只能在一个工作树中检出。<a href="https://git-scm.com/docs/git-worktree/zh_HANS-CN">Git 工作树文档</a></p>
+<pre><code class="language-mermaid">flowchart LR
+    history[&quot;同一个 Git 仓库&lt;br/&gt;共享提交历史&quot;] --&gt; local[&quot;原目录 Local&lt;br/&gt;标题是「待办清单」&quot;]
+    history --&gt; isolated[&quot;Codex Worktree&lt;br/&gt;改成「工作树练习」&quot;]
+</code></pre>
+<ol>
+<li>
+<p>在 Sourcetree 的 <strong>Log / History</strong> 确认有起点提交，再到 <strong>File Status</strong> 确认第 02 章的标题改动已经撤回。这个练习从干净的工作区开始，便于观察两边的区别。</p>
+</li>
+<li>
+<p>任选一个入口新建工作树。</p>
+<ul>
+<li><strong>CLI</strong>　从练习目录的空闲 Codex 对话输入 <code>/worktree</code>，选择 <strong>Start new conversation</strong>。也可以退出到 PowerShell，在同一目录运行 <code>codex --worktree</code>。用 <code>/status</code> 确认 <code>Directory</code> 已切到另一个目录。</li>
+<li><strong>客户端</strong>　选中 <code>todo-workshop</code> 后开一个新对话，在输入框下选 <strong>Worktree</strong>，以 Sourcetree 当前显示的分支为起点。</li>
+</ul>
+<p><img src="images/cli-worktree.png" alt="Codex CLI 的 Worktrees 菜单，选中 Start new conversation" /></p>
+</li>
+<li>
+<p>在新对话发送下面的任务。</p>
+</li>
+</ol>
+<pre><code class="language-text">请在当前工作树里只把 todos.mjs 的标题改成「工作树练习」。
+运行 node todos.mjs 和 node --test，并报告当前目录和结果。
+</code></pre>
+<p>你可以在原目录的 PowerShell 运行 <code>git worktree list</code>，核对列表里有两个不同的路径。回到原目录运行 <code>node .\todos.mjs</code>，标题应仍为「待办清单」。在报告的工作树目录执行同一命令，应看到「工作树练习」。CLI 可用 <code>/diff</code> 检查工作树的差异。客户端可打开 <strong>New tab → Terminal</strong> 验证具体输出。</p>
+<p>工作树起点有时会显示 <strong>detached HEAD</strong>，意思是它从某个提交开始，还没挂在一个有名字的分支上。想保留成果时，先建分支并确认提交；若只做本课演示，进入后续章节时继续选择 <code>todo-workshop</code> 原目录。若 Git 提示分支已在另一个工作树使用，先去该工作树查看改动；需要接到日常目录时再从客户端做 <strong>Hand off</strong>。</p>
+<p>下一章 <a href="#configuration">配置 Codex 与 Magpie</a>。<a href="#matt-pocock--5-执行工单或整份规格">五子棋实战的 <code>implement-spec</code></a> 会把这个做法用到多个工单。</p>
+</section>
+
+<section class="chapter" id="configuration">
+<h2 id="configuration--03-codex-配置与-magpie">03 Codex 配置与 Magpie</h2>
+<h3 id="configuration--配置写在哪里">配置写在哪里</h3>
+<table>
+<thead>
+<tr>
+<th>文件</th>
+<th>它解决的问题</th>
+<th>练习里的例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>~/.codex/config.toml</code></td>
+<td>当前用户的 Codex 设置</td>
+<td>设置个人的默认权限</td>
+</tr>
+<tr>
+<td><code>.codex/config.toml</code></td>
+<td>受信任项目的 Codex 设置</td>
+<td>给特定项目设定工作区权限</td>
+</tr>
+<tr>
+<td><code>AGENTS.md</code></td>
+<td>告诉 Codex 进入这个项目后怎么工作</td>
+<td>修改代码后运行 <code>node --test</code></td>
+</tr>
+<tr>
+<td>skill 文件夹里的 <code>SKILL.md</code></td>
+<td>告诉 Codex 如何执行一套可复用的流程</td>
+<td>先写失败的测试，再实现功能</td>
+</tr>
+<tr>
+<td><code>.codex/rules/*.rules</code></td>
+<td>决定符合条件的命令请求在沙箱外运行时怎么处理</td>
+<td>批准前先询问</td>
+</tr>
+<tr>
+<td><code>.codex/hooks.json</code></td>
+<td>在指定事件发生时自动执行操作</td>
+<td>启动新会话时显示练习提示</td>
+</tr>
+<tr>
+<td><code>config.toml</code> 的 <code>[mcp_servers.*]</code></td>
+<td>给 Codex 接入可调用的工具和数据</td>
+<td>查询 OpenAI 官方文档</td>
+</tr>
+</tbody>
+</table>
+<p><code>~</code> 表示当前用户的主目录。在 PowerShell 可以运行 <code>notepad &quot;$env:USERPROFILE\.codex\config.toml&quot;</code> 打开默认位置的个人配置。若设置过 <code>CODEX_HOME</code>，个人配置位于那个目录。下面的示例允许在工作区写入，超出权限时可请求批准。参见 <a href="https://learn.chatgpt.com/docs/config-file/config-basic">Codex 配置指南</a>。</p>
+<pre><code class="language-toml">sandbox_mode = &quot;workspace-write&quot;
+approval_policy = &quot;on-request&quot;
+</code></pre>
+<p>先通过上节的 <code>/permissions</code> 体验效果。若确实要在配置文件里改，在已有文件里更新相同的顶层键，避免重复添加。组织管理的权限可以限制这些设置。</p>
+<p>在 <code>todo-workshop</code> 根目录新建 <code>AGENTS.md</code>，复制下面两行并保存。开一个新对话，问 Codex「这个练习对运行测试有什么要求？」如果它能指出 <code>node --test</code>，就完成了项目规则的练习。这个文件也会在实战中用到。参见 <a href="https://learn.chatgpt.com/docs/agent-configuration/agents-md">AGENTS.md 官方说明</a>。</p>
+<pre><code class="language-markdown"># 待办练习
+
+修改代码后运行 `node --test`，并用简体中文概括实际验证结果。
+</code></pre>
+<h3 id="configuration--安装-magpie-并导入-skills">安装 Magpie 并导入 Skills</h3>
+<p>本课把 Magpie 用作技能库。Codex 继续使用你在第一课完成的登录。</p>
+<pre><code class="language-mermaid">flowchart LR
+    source[&quot;Matt Pocock 的 GitHub 仓库&quot;] --&gt; library[&quot;Magpie 的 Library → Skills&quot;]
+    library --&gt; target[&quot;分发目标勾选 Codex&quot;]
+    target --&gt; cli[&quot;CLI 运行 /skills → List skills&quot;]
+</code></pre>
+<ol>
+<li>
+<p>打开 <a href="https://github.com/yetone/magpie-releases/releases">Magpie 官方发布页</a>。在 <strong>Assets</strong> 选带图形界面的 Windows 包 <code>magpie-windows-amd64.exe</code>；如果系统是 ARM64，选 <code>magpie-windows-arm64.exe</code>。在 Windows 的「设置 → 系统 → 系统信息」可以查看系统类型。安装后打开 Magpie。</p>
+</li>
+<li>
+<p>进入 <strong>Library → Skills</strong>，从 GitHub 添加 <code>https://github.com/mattpocock/skills</code>。按 <a href="#matt-pocock--实战前的准备">第 05 章的准备清单</a> 选中主流程和依赖的技能，分发目标勾选 <strong>Codex</strong>。若结果只出现部分技能，可按名字逐个导入对应的 GitHub 文件夹。</p>
+</li>
+<li>
+<p>关闭并重新打开 Codex CLI，输入 <code>/skills</code> 后选择 <strong>List skills</strong>，或直接输入 <code>$tdd</code> 搜索。能看到并选中 <code>tdd</code> 就说明 CLI 能发现它。</p>
+</li>
+<li>
+<p>用下面的只读提示确认工作流可以调用。期望它说明 TDD 的顺序，并停在讨论阶段。</p>
+<pre><code class="language-text">$tdd 请先解释你会怎样用红灯、绿灯验证这个项目的一个新功能。
+只说明步骤，不写测试、不修改文件。
+</code></pre>
+</li>
+</ol>
+<p>如果 Magpie 显示已安装、Codex 只显示 <code>magpie-skills</code>，检查该 skill 是否经由 <strong>Skill Router</strong> 分发。要按本教程直接选中独立名称，把这几个技能设为 <strong>Direct</strong>，再开新对话。如果出现同名 skill，先确认它的来源，只保留一种分发方式。文件位置和分发模式见 <a href="https://usemagpie.ai/docs/library#skills">Magpie 技能库文档</a>。原作者另有 <a href="https://github.com/mattpocock/skills#installation-30-second-setup">Codex 插件安装方式</a>，已经从 Magpie 导入时可继续使用当前这一套。</p>
+<p>下图是本机 Codex CLI 用演示项目中的技能文件打开的选择器。找到 <strong>Grill with Docs</strong> 对应的 <code>grill-with-docs</code> 后，按 Enter 可把它插入当前输入。</p>
+<p><img src="images/cli-skills.png" alt="Codex CLI 的实际技能选择器，选中 Grill with Docs，下方有 Implement Spec、PR 和 Retro" /></p>
+<h3 id="configuration--补充练习">补充练习</h3>
+<p>这些小练习可以单独做。<code>AGENTS.md</code> 写日常约定，Skill 写可复用的步骤。需要约束命令、在某个事件自动执行操作，或接入外部工具时，再分别用 Rules、Hooks 和 MCP。</p>
+<h4 id="configuration--rules">Rules</h4>
+<p><code>prefix_rule</code> 按命令及参数的开头匹配。这个示例只检查 <code>node --version</code>，当它请求在沙箱外运行时，<code>prompt</code> 表示先询问。</p>
+<p>在练习目录保存一个 <code>demo.rules</code>。放在根目录方便用验证命令直接读取。如果将来要让规则随受信任的项目加载，配置入口是 <code>.codex/rules/</code>。参见 <a href="https://learn.chatgpt.com/docs/agent-configuration/rules">Rules 官方说明</a>。</p>
+<pre><code class="language-python">prefix_rule(
+    pattern = [&quot;node&quot;, &quot;--version&quot;],
+    decision = &quot;prompt&quot;,
+)
+</code></pre>
+<p>在 PowerShell 验证两个命令的匹配结果。验证只计算策略结果。第一条的 JSON 应显示 <code>prompt</code>，第二条应没有匹配规则。</p>
+<pre><code class="language-powershell">codex execpolicy check --pretty --rules .\demo.rules -- node --version
+codex execpolicy check --pretty --rules .\demo.rules -- node --help
+</code></pre>
+<h4 id="configuration--hooks">Hooks</h4>
+<p>Hook 在特定事件发生时执行命令。下面的 <code>SessionStart</code> 示例在新会话开始时给你一条可见的提示。用单独的练习副本，从它的根目录启动 CLI。</p>
+<p>在该副本的 <code>.codex</code> 文件夹里创建 <code>hooks.json</code> 和 <code>session-start.cjs</code>。将下方内容保存到 <code>.codex/hooks.json</code>。</p>
+<pre><code class="language-json">{
+  &quot;hooks&quot;: {
+    &quot;SessionStart&quot;: [
+      {
+        &quot;matcher&quot;: &quot;^startup$&quot;,
+        &quot;hooks&quot;: [
+          { &quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;node .codex/session-start.cjs&quot; }
+        ]
+      }
+    ]
+  }
+}
+</code></pre>
+<p>将这行保存到 <code>.codex/session-start.cjs</code>。</p>
+<pre><code class="language-javascript">console.log(JSON.stringify({ systemMessage: '待办练习 Hook 已运行' }));
+</code></pre>
+<p>从副本根目录打开 Codex CLI，用 <code>/hooks</code> 查看来源，读完这两个文件再信任该 hook。退出并重新启动一个 CLI 会话，观察是否出现「待办练习 Hook 已运行」。如果列表为空，检查当前目录和该项目的信任状态。参见 <a href="https://learn.chatgpt.com/docs/hooks">Hooks 官方说明</a>。</p>
+<h4 id="configuration--mcp">MCP</h4>
+<p>MCP（Model Context Protocol）让 Codex 能调用外部工具。这里用只读的 OpenAI Docs MCP 查公开文档。</p>
+<p>在 PowerShell 登记并检查服务。</p>
+<pre><code class="language-powershell">codex mcp add openaiDocsTutorial --url https://developers.openai.com/mcp
+codex mcp list
+</code></pre>
+<p>重新打开 CLI，在 Codex 的输入框运行 <code>/mcp</code>，查看服务及工具是否可用。试发「用 <code>openaiDocsTutorial</code> 查官方文档，告诉我 <code>/status</code> 能看到什么，并给出来源」，核对对话里出现的 MCP 工具调用。参见 <a href="https://learn.chatgpt.com/docs/extend/mcp#connect-codex-to-an-mcp-server">MCP 配置指南</a>和 <a href="https://developers.openai.com/learn/docs-mcp">OpenAI Docs MCP</a>。</p>
+<p><img src="images/cli-mcp.png" alt="Codex CLI 的 /mcp 显示 openaiDocsTutorial 已连接，并列出 5 个工具" /></p>
+<p>接下来可以做桌面客户端的 <a href="#computer-use">04 Computer Use</a>，也可以直接进入 <a href="#matt-pocock">05 Matt Pocock Skills 实战</a>。</p>
+</section>
+
+<section class="chapter" id="computer-use">
+<h2 id="computer-use--04-computer-use客户端选练">04 Computer Use（客户端选练）</h2>
+<p>本章使用 ChatGPT 桌面应用的 Computer Use。让 Codex 打开 Windows 计算器并验证 <code>7 × 8</code>，完成标志是<strong>计算器窗口显示 <code>56</code></strong>。本章可选，可以直接进入 <a href="#matt-pocock">05 Matt Pocock Skills 实战</a>。</p>
+<pre><code class="language-mermaid">flowchart LR
+    settings[&quot;桌面客户端：Settings → Computer use&quot;] --&gt; chat[&quot;打开 Codex 对话&quot;]
+    chat --&gt; request[&quot;指定 Windows 计算器和算式&quot;]
+    request --&gt; result[&quot;检查计算器窗口里的 56&quot;]
+</code></pre>
+<ol>
+<li>
+<p>打开 ChatGPT 桌面客户端，选择 <strong>Codex</strong>。</p>
+</li>
+<li>
+<p>到 <strong>Settings → Computer use</strong> 找到 <strong>Any App</strong> 或 <strong>Computer Use</strong> 的设置入口。按界面提示完成设置；若工作区有应用范围或权限限制，以它显示的选项为准。</p>
+</li>
+<li>
+<p>在 Windows 开始菜单打开「计算器」，切换到标准模式并保持窗口可见。回到 Codex 对话，发送下面的提示。若弹出权限提示，确认请求的应用是计算器。</p>
+<pre><code class="language-text">请用 Computer Use 操作 Windows 的「计算器」窗口，用界面计算 7 × 8。
+按下等号后查看屏幕，告诉我窗口实际显示的结果。只操作计算器。
+</code></pre>
+</li>
+<li>
+<p>看计算器里的数字，并对照下图。若没看到计算器被操作，检查客户端是否真正调用了 Computer Use、权限是否允许当前应用，以及计算器是否在当前活动桌面。官方入口见 <a href="https://learn.chatgpt.com/docs/computer-use">Computer Use 指南</a>。</p>
+</li>
+</ol>
+<p><img src="images/calculator-56.jpg" alt="Windows 标准计算器显示算式 7 × 8 和结果 56" /></p>
+<p>图为本机实际操作后的计算器窗口，只包含演示算式和结果。</p>
+<p>接下来在同一个客户端做 <a href="#matt-pocock">05 Matt Pocock Skills 实战</a>。</p>
+</section>
+
+<section class="chapter" id="matt-pocock">
+<h2 id="matt-pocock--05-matt-pocock-skills-实战--windows-五子棋">05 Matt Pocock Skills 实战 · Windows 五子棋</h2>
+<p><strong>任务目标</strong>　在 Codex 桌面客户端从空的 Git 仓库做一个 Windows 五子棋。最小交付是双击 <code>Gomoku.exe</code>、创建人机房并下一局。想做完整版本，再加局域网对战、观战、弹幕和断线续局。本章用一次真实会话的截图、规格、工单和验收记录讲解。</p>
+<p>原会话先做出了可玩的版本，试玩时才发现黑棋、白棋和观众在界面上不容易区分，于是补做了三个原型并选择 A 版。本课把<strong>先试界面、再定规格</strong>放进需求会话。想先练一个没有 GUI 的小任务，可以做<a href="https://github.com/ZeeJune1112/skills-study/blob/main/docs/matt-pocock-todo.md">待办筛选短练习</a>。</p>
+<p><strong>跟着原对话看</strong>　<a href="#session">打开五子棋实战会话（HTML）</a>。里面有脱敏的原话、A/B/C 原型和 Windows 实拍。跟练时把 <code>prototype</code> 放在 <code>grill-with-docs</code> 之后，选定方案再写规格。</p>
+<h3 id="matt-pocock--实战前的准备">实战前的准备</h3>
+<ol>
+<li>用 Sourcetree 为一个新的练习目录创建本地 Git 仓库，再用 Codex 桌面客户端打开它，选择 <strong>Local</strong> 开一个对话。做 Windows 版时，开发机需要 .NET 10 SDK，可用 <code>dotnet --list-sdks</code> 检查。<a href="#git-worktrees">Git 与 Worktree</a> · <a href="https://dotnet.microsoft.com/zh-cn/download/dotnet/10.0">.NET 10 下载</a></li>
+<li>用 <a href="#configuration--安装-magpie-并导入-skills">Magpie</a> 装主流程的 <code>grill-with-docs</code>、<code>prototype</code>、<code>to-spec</code>、<code>to-tickets</code>、<code>implement</code>、<code>implement-spec</code>、<code>diagnosing-bugs</code> 和 <code>retro</code>。一起装 <code>setup-matt-pocock-skills</code>、<code>triage</code>、<code>grilling</code>、<code>domain-modeling</code>、<code>tdd</code>、<code>code-review</code> 和 <code>writing-for-agents</code>。对话里输入 <code>$</code> 选技能，再接上提示词正文。<a href="https://github.com/mattpocock/skills">上游技能清单</a></li>
+<li>第一次在这个仓库用 Matt 的技能，发 <code>$setup-matt-pocock-skills 使用本地 Markdown，保留默认分流标签，用 AGENTS.md 和单一术语表。</code> 按界面提示确认。打开 <code>AGENTS.md</code>，核对它指向 <code>docs/agents/issue-tracker.md</code>、<code>docs/agents/triage-labels.md</code> 和 <code>docs/agents/domain.md</code>。以后规格和工单放进 <code>.scratch/</code>，标签和领域文档的约定也能从这三个入口找到。</li>
+</ol>
+<h3 id="matt-pocock--在同一个对话完成需求与拆单">在同一个对话完成需求与拆单</h3>
+<h4 id="matt-pocock--1-grill-with-docs-问清楚玩家能做什么">1. <code>grill-with-docs</code> 问清楚玩家能做什么</h4>
+<pre><code class="language-text">$grill-with-docs 我想做一个 Windows 11 x64 的五子棋。发给朋友一个 exe，双击就能玩。
+支持 15×15 棋盘、人机和同一局域网双人对战。请先分轮问我入房、观战、悔棋和断线怎么处理。
+把确认的术语写进 GLOSSARY.md。方案确认前先停在讨论和原型阶段。
+</code></pre>
+<p>实战确认了三个会改变使用体验的决定。访客先入观众席，再选空位上席。房主建人机房时选难度，对局中固定。房主开房时可选断线立即中止或限时续局，等待范围是 15–180 秒，默认 30 秒。</p>
+<p>打开项目根目录的 <code>GLOSSARY.md</code>，可以看到「对战席」和「观众席」各自指什么。讨论和测试都可以沿用这些名字。遇到以后难改的架构取舍时，还可用 ADR 记录决定和理由。</p>
+<blockquote>
+<p><strong>观众席</strong><br />
+供玩家观看对局和发送弹幕的位置。其他玩家进入房间后默认在观众席，可以选择空闲的对战席参加对局。</p>
+</blockquote>
+<p>摘自本次实战的 <code>GLOSSARY.md</code>。<a href="https://github.com/mattpocock/skills/blob/main/skills/engineering/grill-with-docs/SKILL.md">上游 <code>grill-with-docs</code></a></p>
+<h4 id="matt-pocock--2-prototype-对比三版选定一版">2. <code>prototype</code> 对比三版，选定一版</h4>
+<pre><code class="language-text">$prototype 先做一个可点的棋室原型，给我三版布局。
+让我在同一页面切换 A/B/C、黑棋/白棋/观众，用同一局棋比较身份、轮次和操作入口。
+等我选定，再把选中的布局与交互要求整理成可写进规格的结论。
+</code></pre>
+<p>打开原型，用三个身份各看一遍。黑棋和白棋能否一眼认出自己的身份和当前轮次？观众能否直接找到弹幕输入？实战提供了三种布局。</p>
+<table>
+<thead>
+<tr>
+<th>方案</th>
+<th>打开后看什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>A 棋室侧栏</strong></td>
+<td>左侧棋盘，右侧用大卡片显示身份和是否轮到自己。</td>
+</tr>
+<tr>
+<td><strong>B 双席对阵</strong></td>
+<td>黑、白身份分列棋盘两侧。<a href="images/gomoku-prototype-b.png">B 版实拍</a></td>
+</tr>
+<tr>
+<td><strong>C 沉浸棋盘</strong></td>
+<td>棋盘居中，顶部标身份和轮次，观众在底部发弹幕。<a href="images/gomoku-prototype-c.png">C 版实拍</a></td>
+</tr>
+</tbody>
+</table>
+<p><img src="images/gomoku-prototype-a.png" alt="A 版棋室侧栏原型，棋盘右侧有执黑身份卡、席位和悔棋重开操作" /></p>
+<p>实战选择了 <strong>A</strong>。你可以回复「选 A。保留左棋盘右侧栏，黑棋、白棋和观众各有清晰身份卡，观众能从侧栏发弹幕。」这样 <code>to-spec</code> 拿到的是可以实现和验收的界面决定。原会话的交互原型文件是 <code>src/Gomoku.App/LanMatchView.prototype.html</code>，保存在独立分支 <code>codex/gomoku-room-ui-prototype</code>。留一个原型入口和选型结论，切换对话后也能追溯。<a href="https://github.com/mattpocock/skills/blob/main/skills/engineering/prototype/SKILL.md">上游 <code>prototype</code></a></p>
+<h4 id="matt-pocock--3-to-spec-把已确认的结果写成规格">3. <code>to-spec</code> 把已确认的结果写成规格</h4>
+<pre><code class="language-text">$to-spec 把刚确认的规则和 A 版界面写入 .scratch/gomoku/spec.md。
+先让我确认用什么来验收规则、界面和发布包。确认后保存到本地事项追踪器。
+本轮只交付规格，等我明确同意再写正式代码。
+</code></pre>
+<p>当 Codex 请你确认测试入口时，可以答「用房间会话验证落子、席位、轮次和断线结果。用发布版 <code>Gomoku.exe</code> 验证双击、对战和观战。界面检查三个身份是否清楚。」原会话的 <code>spec.md</code> 有 38 条用户故事，记录了交付范围、关键决定和测试入口。其中一条是「等待期间保留原棋盘和轮次。」跟练时打开该文件，确认 A 版的可见要求也已写进去，例如观众卡显示身份和弹幕入口。<a href="https://github.com/mattpocock/skills/blob/main/skills/engineering/to-spec/SKILL.md">上游 <code>to-spec</code></a></p>
+<h4 id="matt-pocock--4-to-tickets-拆出可以单独验收的工单">4. <code>to-tickets</code> 拆出可以单独验收的工单</h4>
+<pre><code class="language-text">$to-tickets 读 .scratch/gomoku/spec.md。先列出能分别演示和验收的工单，以及它们的依赖。
+我确认后，再在 .scratch/gomoku/issues/ 下按顺序保存，每张工单一个 Markdown 文件。
+</code></pre>
+<p>查看草稿时，先问自己「做完第一张能不能试玩」。本例的第一张可以双击程序完成人机首局。后面的每一项也有一个可见结果。确认拆分后再让 Codex 写文件。技能名在上游用复数 <code>to-tickets</code>。<a href="https://github.com/mattpocock/skills/blob/main/skills/engineering/to-tickets/SKILL.md">上游 <code>to-tickets</code></a></p>
+<table>
+<thead>
+<tr>
+<th>工单</th>
+<th>做完能看到什么</th>
+<th>先完成</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>01</td>
+<td>双击程序，完成第一局人机。</td>
+<td>无</td>
+</tr>
+<tr>
+<td>02</td>
+<td>可以选择三档人机难度。</td>
+<td>01</td>
+</tr>
+<tr>
+<td>03</td>
+<td>从局域网大厅加入房间并完成双人对局。</td>
+<td>01</td>
+</tr>
+<tr>
+<td>04</td>
+<td>观众能中途进房，看到当前棋盘和后续落子。</td>
+<td>03</td>
+</tr>
+<tr>
+<td>05</td>
+<td>观众能发送滚动弹幕。</td>
+<td>04</td>
+</tr>
+<tr>
+<td>06</td>
+<td>对手可以确认或拒绝悔棋、重开。</td>
+<td>03</td>
+</tr>
+<tr>
+<td>07</td>
+<td>棋手断线后按房间设置中止或续局。</td>
+<td>04</td>
+</tr>
+<tr>
+<td>08</td>
+<td>交付单文件，并在目标设备上验收。</td>
+<td>02、05、06、07</td>
+</tr>
+</tbody>
+</table>
+<p>打开 <code>.scratch/gomoku/issues/07-disconnect-and-rejoin.md</code>。拆单完成时，这张工单用如下字段说明怎么开工和验收，实施后再更新完成状态和检查结果。原会话为这 8 张工单记录了 36 项验收标准。</p>
+<pre><code class="language-markdown"># 07: 按房间规则处置断线并恢复对局
+**Blocked by:** 04 在双人房和人机房实时观战
+**Status:** ready-for-agent
+- [ ] 等待期内恢复原席、棋盘和轮次，即使观众席已满。
+</code></pre>
+<h3 id="matt-pocock--提交需求文件再选择会话">提交需求文件，再选择会话</h3>
+<p>在 Sourcetree 提交这次生成的 <code>AGENTS.md</code>、<code>docs/agents/</code>、<code>GLOSSARY.md</code>、<code>.scratch/gomoku/spec.md</code> 和 <code>.scratch/gomoku/issues/</code>，从 <strong>Log / History</strong> 复制提交号。规格里要能找到 A 版选型，工单里要能找到验收条件。这样新会话或新工作树都有明确的起点。</p>
+<ul>
+<li><strong>Compact</strong>　如果当前 Codex 对话的 <code>/</code> 菜单提供 <code>/compact</code>，可压缩当前对话的上下文，等它完成后留在这里。</li>
+<li><strong>新开 Session</strong>　在同一项目选择 <strong>Local</strong> 开新对话。第一条发下方实施指令，带上提交号和对应文件路径。</li>
+</ul>
+<p>选任一方式后，明确回复同意开工。原实战的规格也用 <code>Implementation: authorized</code> 记录了用户的正式授权。之后在执行对话里继续做验收、排错和复盘。<a href="https://learn.chatgpt.com/guides/best-practices#organize-long-running-chats">Codex 会话说明</a></p>
+<h3 id="matt-pocock--5-执行工单或整份规格">5. 执行工单或整份规格</h3>
+<h4 id="matt-pocock--只做一个-issue用-implement">只做一个 Issue，用 <code>implement</code></h4>
+<p>第一次跟练可以先照下方做 01。Issue 就是工单。<code>implement</code> 读取指定工单，按约定补测试、做实现、审查，再把成果提交到当前分支。先在 Sourcetree 选好练习分支。<a href="https://github.com/mattpocock/skills/blob/main/skills/engineering/implement/SKILL.md">上游 <code>implement</code></a></p>
+<pre><code class="language-text">$implement 我批准执行 .scratch/gomoku/issues/01-play-first-ai-match.md。
+起点提交是 &lt;填写提交号&gt;。先报出工单标题和验收项，再实现这张工单。
+请在 Windows 上从单文件发布包打开人机首局，并记录实际验证结果。
+</code></pre>
+<p>把 <code>01-play-first-ai-match.md</code> 换成你的第一张工单文件名，提交号用刚才复制的值。这条是跟练用法。原会话走的是整份规格路线，其中 01 的 <code>## Answer</code> 记有首局实现及 7 项房间会话检查的结果。读这段时，可以把工单的「玩家能做什么」和这次「实际测了什么」逐条对照。</p>
+<h4 id="matt-pocock--做完整-spec用-implement-spec">做完整 Spec，用 <code>implement-spec</code></h4>
+<pre><code class="language-text">$implement-spec 我批准执行 .scratch/gomoku/spec.md。
+起点提交是 &lt;填写提交号&gt;。先读 GLOSSARY.md、规格和 .scratch/gomoku/issues/。
+按工单依赖在本地集成分支实施。每张工单记录验证结果，最后告诉我发行包位置和待人工验收项。
+</code></pre>
+<p><code>implement-spec</code> 以整份规格为入口，理解工单之间的依赖。可开工的工单由子代理在各自的工作树里实现，再合入集成分支。原实战合到了 <code>gomoku-integration</code>，产物包括应用代码 <code>src/Gomoku.App/</code>、规则与会话代码 <code>src/Gomoku.Core/</code>、自动检查 <code>tests/Gomoku.Checks/</code>、发行包 <code>dist/win-x64/Gomoku.exe</code>，以及 README 里的构建和打包方法。<a href="#git-worktrees">Git 与 Worktree</a> · <a href="https://github.com/mattpocock/skills/blob/main/skills/engineering/implement-spec/SKILL.md">上游 <code>implement-spec</code></a></p>
+<p>双击自己生成的 <code>Gomoku.exe</code>，先建一局人机确认能落子。完整版本再分别做棋手和观众，核对原型选中的布局。下图是原案例的 Windows 版，实拍已裁去房间标识。<a href="images/gomoku-windows-spectator.png">观众视角实拍</a></p>
+<p><img src="images/gomoku-windows-black.png" alt="Windows 五子棋的 A 版实拍，黑棋身份卡和当前轮次显示在棋盘右侧" /></p>
+<h3 id="matt-pocock--6-遇到-bug用-diagnosing-bugs">6. 遇到 Bug，用 <code>diagnosing-bugs</code></h3>
+<pre><code class="language-text">$diagnosing-bugs 房主选择「等待重连」。访客棋手关窗，在等待期内重新加入同一房间却不能继续下棋。
+先复现并记录看到的结果。修完后用同样步骤确认能回原席并下一手。
+也请检查观众退出后能否重进继续观战。
+</code></pre>
+<p>原会话发现，点击退出或关窗都被当作永久离房。保留席位后还有一个问题，重新启动的客户端缺少续局凭据，只能进入观众席。修复后，访客可在原设备、同一 Windows 账户下限时回来，恢复原席、棋盘和轮次。观众重进也单独验证了棋盘同步、后续落子和弹幕。</p>
+<p>这一步留下了<strong>可重跑的证据</strong>。工单 07 的 <code>## Comments</code> 记录旧版症状和修复后结果，<code>tests/Windows/smoke.ps1</code> 保留了关窗续局场景。原项目从根目录运行 <code>.\tests\Windows\smoke.ps1 -Scenario GuestClose</code> 即可复验这个场景。跟练时用自己项目的同一条复现路径先跑失败、再跑通过。<a href="https://github.com/mattpocock/skills/blob/main/skills/engineering/diagnosing-bugs/SKILL.md">上游 <code>diagnosing-bugs</code></a></p>
+<h3 id="matt-pocock--7-用-retro-改进下一次实施">7. 用 <code>retro</code> 改进下一次实施</h3>
+<pre><code class="language-text">$retro 复盘刚才执行 implement 或 implement-spec 的对话、工单和实际验收。
+挑出最拖慢实施或最容易误判的一件事，说明发生了什么、下次如何提前发现。
+优先复用项目已有的测试或文档，先让我选要落地的改进。
+</code></pre>
+<p><code>retro</code> 会在对话里排出改进建议。原会话里，用户后来回复「开始执行」，这些改进才写进项目。</p>
+<table>
+<thead>
+<tr>
+<th>这次遇到的情况</th>
+<th>落地后下次怎么用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>窗口续局回归依赖开发机目录下的脚本。</td>
+<td><code>tests/Windows/smoke.ps1</code> 随仓库保存，能复验关窗续局和最小窗口等场景。</td>
+</tr>
+<tr>
+<td>候选包曾更新，<code>dist</code> 里还是旧包。</td>
+<td><code>scripts/publish.ps1</code> 通过回归后才替换发行包并校验哈希。</td>
+</tr>
+<tr>
+<td>核心检查靠临时记得运行。</td>
+<td><code>.githooks/pre-commit</code> 在该练习仓库提交时运行 <code>scripts/check.ps1</code>。</td>
+</tr>
+<tr>
+<td>开工时机，以及断网、关窗、点退出的行为曾有误解。</td>
+<td><code>spec.md</code> 记录开工授权，并用角色与操作的表格明确续局和中止条件。</td>
+</tr>
+<tr>
+<td>终端找到的 SDK 版本低于项目要求。</td>
+<td><code>scripts/dotnet.ps1</code> 和 README 说明如何定位或指定 SDK。</td>
+</tr>
+</tbody>
+</table>
+<p>复盘改进后的发布记录为 <strong>32 项核心检查和 9 个 Windows 窗口场景通过</strong>。工单 08 仍是 <code>ready-for-human</code>，等两台实体设备的局域网联测和未额外安装 .NET 的 Windows 11 验收。新人跟练时可以像这样把「已测」和「等人实测」都写进工单。<a href="https://github.com/mattpocock/skills/blob/main/skills/engineering/retro/SKILL.md">上游 <code>retro</code></a></p>
+</section>
+
+<section class="chapter transcript" id="session">
+  <header>
+    <a href="#matt-pocock">返回第 05 章教程</a>
+    <h2>Windows 五子棋实战会话</h2>
+    <p>2026 年 11 月 24 日 · Codex 桌面客户端 · Set up Matt Pocock skills</p>
+    <p>按原会话顺序摘录的对话，保留关键提问、回复和交付结果。本机路径与工具日志已省略，配图沿用教程中的脱敏截图。每段末尾的「对应产物」可和教程里的文件名对照。</p>
+    <aside class="note" aria-label="跟练顺序纠正">
+      <p><strong>跟练时，把 <code>prototype</code> 提前到 <code>grill-with-docs</code> 之后。</strong> 原会话是先实现，试玩时才发现三个角色不容易区分，随后补做原型。下方保留这段实际顺序，方便回看当时为什么要改界面。</p>
+      <p>推荐在同一对话完成 <code>grill-with-docs</code> → <code>prototype</code> → 选定方案 → <code>to-spec</code> → <code>to-tickets</code>。保存规格和工单后，再按第 05 章选择 Compact 或新开会话，进入实施、排错和复盘。</p>
+    </aside>
+    <nav aria-label="原会话目录">
+      <strong>按原会话顺序跳转</strong>
+      <ol>
+        <li><a href="#session--setup">配置项目</a></li>
+        <li><a href="#session--grill">问清五子棋规则</a></li>
+        <li><a href="#session--spec">停下提前实施并写规格</a></li>
+        <li><a href="#session--tickets">拆工单，经历上下文压缩</a></li>
+        <li><a href="#session--implement">授权实施，交付首版</a></li>
+        <li><a href="#session--prototype">补做原型，选择 A 版</a></li>
+        <li><a href="#session--bug">复现并修复关窗续局</a></li>
+        <li><a href="#session--retro">复盘并改进发布流程</a></li>
+      </ol>
+    </nav>
+  </header>
+
+  <section id="session--setup">
+    <h3>配置项目 · <code>setup-matt-pocock-skills</code></h3>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote><code>$setup-matt-pocock-skills</code></blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · 摘录</strong>
+      <blockquote>I recommend <strong>local Markdown</strong> under <code>.scratch/</code>. Is that where you want to track issues for this project?</blockquote>
+    </div>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote>使用<strong>local Markdown</strong></blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex</strong>
+      <blockquote>
+        <p>已选用本地 Markdown，议题和规格文档放在 <code>.scratch/</code> 下。</p>
+        <p>要保留默认的五个 triage 标签吗？建议保留 <code>needs-triage</code>、<code>needs-info</code>、<code>ready-for-agent</code>、<code>ready-for-human</code> 和 <code>wontfix</code>。</p>
+      </blockquote>
+    </div>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote>都保留</blockquote>
+    </div>
+    <p>Codex 接着展示配置草稿，用户确认把入口写入仓库根目录。</p>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote>使用<code>AGENTS.md</code></blockquote>
+    </div>
+    <p class="artifact"><strong>对应产物</strong>　<code>AGENTS.md</code> 指向 <code>docs/agents/</code> 下的追踪方式、标签和领域文档约定。这个案例选择了本地工单，因此后面的规格和工单都写进 <code>.scratch/</code>。</p>
+  </section>
+
+  <section id="session--grill">
+    <h3>问清五子棋规则 · <code>grill-with-docs</code></h3>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote>
+        <p><code>$grill-with-docs</code> 开发一个五子棋双人对战小游戏，打包为可在Windows上直接运行的单文件可执行程序（.exe），双击即可启动，无需安装任何依赖。</p>
+        <p>功能需求：</p>
+        <ol>
+          <li>双人对战模式：两名玩家在不同设备上轮流落子（先实现同一局域网对战，留出接口，后续会实现异地对战）。</li>
+          <li>创建房间：支持创建房间，生成房间标识，供另一名玩家加入对局。</li>
+          <li>人机匹配：支持与电脑AI对战，玩家可与AI自动匹配开始对局。</li>
+          <li>难度调整：提供多个AI难度等级（如简单、普通、困难），玩家可自由切换，难度等级需影响AI的决策水平。</li>
+        </ol>
+        <p>界面与体验要求：</p>
+        <ul>
+          <li>棋盘采用标准15×15网格，落子位置清晰，支持落子提示与胜负判定。</li>
+          <li>界面简洁易用，包含当前轮到谁、重新开始、悔棋/退出等基础操作。</li>
+          <li>对局结束后显示胜负结果，并支持快速开启新对局。</li>
+        </ul>
+        <p>请给出完整的项目结构、核心代码实现与打包方案的说明。</p>
+      </blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · 第一轮摘录</strong>
+      <blockquote>
+        <p><strong>Q2 · 加入房间</strong><br>是否接受复制粘贴一条房间邀请？建议房主点击「创建房间」后获得一条可复制的邀请，其中包含局域网地址和房间码。客人粘贴一次即可加入，双方使用同一个程序。</p>
+        <p><strong>Q4 · 人机难度</strong><br>是否采用开局即匹配、对局中可切换的方式？建议点击「人机对战」即可开局，玩家默认执黑。简单档偏随机，普通档会识别一步成五和挡五，困难档会搜索后续攻防。切换难度从下一次 AI 落子起生效。</p>
+      </blockquote>
+    </div>
+    <div class="message user">
+      <strong class="speaker">用户 · 第一轮摘录</strong>
+      <blockquote>
+        <p>Q2:房主创建房间，再同一个局域网内，其他玩家可以看到这个房间，进入房间后默认在观众席，可以选择上席参与对战或者在观众席观看，观众席默认设置5个，观众可以发送悬浮弹幕从画面顶层滚过，只做内容展示，不抢占操作焦点</p>
+        <p>Q4:创建房间可以选择人机难度，对局中不可以切换</p>
+        <p>补充一个内容，创建房间可以选择断网处理方式，直接终止比赛或者超时等待连接15s到3mins之内，默认30s，玩家返回就继续参与对局，双方都离开则游戏结束</p>
+      </blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · 第二轮摘录</strong>
+      <blockquote>
+        <p><strong>Q7 · 双人房入座</strong><br>房主创建双人房后默认坐黑席，可以吗？建议其他玩家先进入观众席，再自行选择空席。两席坐满后由房主开始。观众席默认 <strong>5 个</strong>，创建时可调整。观众席满时，新人等有空位再入房，断线玩家仍可返回自己保留的对战席。</p>
+        <p><strong>Q9 · 断线与主动退出</strong><br>是否把主动退出视为中止当前对局？建议点退出即中止。意外断线按房间设置处理，选择等待时暂停落子，玩家在期限内自动回到原座位和原棋盘，超时则中止。房主程序保持开着时，房主网络恢复后也能续局。房主关闭程序时房间解散，中止的对局不判胜负。</p>
+      </blockquote>
+    </div>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote>全部同意</blockquote>
+    </div>
+    <p class="artifact"><strong>对应产物</strong>　<code>GLOSSARY.md</code> 把「对战席」和「观众席」定为后续规格和测试共同使用的术语。第二轮的退出规则后来因实际试玩而修订，见<a href="#session--bug">续局排错</a>。</p>
+  </section>
+
+  <section id="session--spec">
+    <h3>停下提前实施并写规格 · <code>to-spec</code></h3>
+    <p>上一轮答完「全部同意」后，Codex 提前开始了实现。用户打断了这一轮，并明确要求先审规格。</p>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote><code>$to-spec</code> 如果有创建代码就先删除，确定方案等我同意再写代码</blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · 摘录</strong>
+      <blockquote>
+        <p>已删除上一轮新增的源码、项目文件和 <code>.gitignore</code>，并确认项目里没有构建产物。<code>src</code> 目录已为空。</p>
+        <p>请确认规格和验收方式。<strong>收到你的明确同意后，我才会编写代码、构建和打包。</strong></p>
+      </blockquote>
+    </div>
+    <p class="artifact"><strong>对应产物</strong>　<code>.scratch/gomoku/spec.md</code> 记录了 38 条用户故事和验收方式。比如用房间会话检查规则和断线行为，用发布版 <code>.exe</code> 验证双击启动及观战。</p>
+  </section>
+
+  <section id="session--tickets">
+    <h3>拆工单与压缩上下文 · <code>to-tickets</code></h3>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote><code>$to-tickets</code></blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · 摘录</strong>
+      <blockquote>
+        <p><strong>单文件启动并完成人机首局</strong>（无阻塞）<br>双击 Windows <code>.exe</code>，进入简单人机对局。支持 15×15 棋盘、落子提示、胜负与和棋判定、直接悔棋、重开和退出。</p>
+        <p>这 8 张的粒度和依赖是否合适？有需要合并、拆分或调整依赖的工单，可以直接指出编号。确认后逐张发布到本地追踪器。<strong>工单发布后，开工仍以你对规格的明确确认为准。</strong></p>
+      </blockquote>
+    </div>
+    <p>会话此时记录了一次上下文压缩。压缩前八张工单还在草拟阶段，压缩后仍在同一对话。</p>
+    <div class="message user">
+      <strong class="speaker">用户 · 压缩后第一次发出实施指令</strong>
+      <blockquote><code>$implement-spec</code> 开始执行<code>spec.md</code></blockquote>
+    </div>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote>确定</blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · 摘录</strong>
+      <blockquote>
+        <p>已按确认的拆分创建 8 张五子棋工单，每张一份本地 Markdown，状态均为 <code>ready-for-agent</code>。已核对全部依赖和 36 项验收标准。</p>
+        <p>本次确认用于发布工单。开发、构建和打包仍等待你明确批准五子棋规格。</p>
+      </blockquote>
+    </div>
+    <p class="artifact"><strong>对应产物</strong>　<code>.scratch/gomoku/issues/</code> 下有八份 Markdown。<code>01-play-first-ai-match.md</code> 无前置依赖，<code>07-disconnect-and-rejoin.md</code> 则等实时观战工单完成。</p>
+  </section>
+
+  <section id="session--implement">
+    <h3>授权实施，交付首版 · <code>implement-spec</code></h3>
+    <div class="message user">
+      <strong class="speaker">用户 · 工单发布后重新发送</strong>
+      <blockquote><code>$implement-spec</code> 开始执行<code>spec.md</code></blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · 摘录</strong>
+      <blockquote>工作区目前只有规格和工单。我会建立本地 Git 集成分支，从单文件启动和人机首局开始。</blockquote>
+    </div>
+    <p>实施过程中会话中断。用户恢复会话后，Codex 继续完成核对并交付首版。</p>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote><code>continue</code></blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · 首版验收摘录</strong>
+      <blockquote>
+        <p>支持 15×15 五子棋、局域网自动发现和双人对战、三档人机、实时观战与弹幕。双人悔棋和重开需对手确认。开房时可选断线立即中止，或等待 15–180 秒，默认 30 秒。中止后可以在原房间补位开下一局。</p>
+        <p>Release 构建零警告，32 项自动化检查全部通过。同机三个发布版实例走通了对战、观战、弹幕焦点、悔棋、重开及断线恢复。</p>
+      </blockquote>
+    </div>
+    <p class="artifact"><strong>对应产物</strong>　整份规格的实现合入 <code>gomoku-integration</code>，可试玩文件是 <code>dist/win-x64/Gomoku.exe</code>。如果只想跟做一张 Issue，第 05 章提供了用 <code>implement</code> 执行工单 01 的示例。</p>
+  </section>
+
+  <section id="session--prototype">
+    <h3>补做原型，选择 A 版 · <code>prototype</code></h3>
+    <aside class="note" aria-label="原型顺序纠正">
+      <p><strong>这一步在原会话用晚了。</strong> 当时首版已交付，试玩后才提出辨认角色的问题。跟练时，在 <a href="#session--grill"><code>grill-with-docs</code></a> 问清角色与操作后做原型，选定布局，再交给 <code>to-spec</code> 和 <code>to-tickets</code>。这样身份卡、轮次和弹幕入口可以进入规格与首版验收。</p>
+    </aside>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote>
+        <p><code>$prototype</code></p>
+        <p>两位对战玩家和观众席区分不明显，对应UI修改一下，例如白棋需要有一个白棋UI，黑棋也类似，观众就显示一个观众的UI，你出三版UI给我看看，我选择一个看看</p>
+      </blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · 摘录</strong>
+      <blockquote>
+        <p><strong>A · 棋室侧栏</strong>　保留左棋盘、右操作区，用黑棋、白棋和观众三种大身份卡标明当前视角。</p>
+        <p><strong>B · 双席对阵</strong>　黑白棋各占棋盘一侧，明确标出「你的席位」。观众有独立的底部观战区和弹幕入口。</p>
+        <p><strong>C · 沉浸棋盘</strong>　棋盘居中，顶部显示身份和轮次，底部随角色显示对战操作或弹幕输入。</p>
+        <p>这次交付的是浏览器原型，Windows 版等你选定后再实现。回复 <strong>A、B 或 C</strong>，也可以指定想组合的部分。</p>
+      </blockquote>
+    </div>
+    <div class="gallery">
+      <figure>
+        <a href="images/gomoku-prototype-a.png"><img src="images/gomoku-prototype-a.png" alt="A 版原型，棋盘右侧有执黑身份卡与席位列表" width="1040" height="521" loading="lazy"></a>
+        <figcaption>A · 棋室侧栏</figcaption>
+      </figure>
+      <figure>
+        <a href="images/gomoku-prototype-b.png"><img src="images/gomoku-prototype-b.png" alt="B 版原型，黑白身份卡分列棋盘两侧" width="1040" height="478" loading="lazy"></a>
+        <figcaption>B · 双席对阵</figcaption>
+      </figure>
+      <figure>
+        <a href="images/gomoku-prototype-c.png"><img src="images/gomoku-prototype-c.png" alt="C 版原型，棋盘居中，身份与轮次显示在顶部" width="1040" height="560" loading="lazy"></a>
+        <figcaption>C · 沉浸棋盘</figcaption>
+      </figure>
+    </div>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote>A</blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · Windows 版交付摘录</strong>
+      <blockquote>已把 <strong>A 版「棋室侧栏」</strong> 做进 Windows 版。黑棋、白棋和观众各有独立身份卡，席位列表会高亮当前落子方并显示观众人数。观众可以在侧栏发送弹幕。</blockquote>
+    </div>
+    <div class="gallery">
+      <figure>
+        <a href="images/gomoku-windows-black.png"><img src="images/gomoku-windows-black.png" alt="Windows 实机黑棋视角，右侧显示执黑身份和当前轮次" width="762" height="492" loading="lazy"></a>
+        <figcaption>Windows 版 · 黑棋视角</figcaption>
+      </figure>
+      <figure>
+        <a href="images/gomoku-windows-spectator.png"><img src="images/gomoku-windows-spectator.png" alt="Windows 实机观众视角，右侧显示观众身份和弹幕输入" width="762" height="492" loading="lazy"></a>
+        <figcaption>Windows 版 · 观众视角</figcaption>
+      </figure>
+    </div>
+    <p class="artifact"><strong>对应产物</strong>　原项目的浏览器原型是 <code>src/Gomoku.App/LanMatchView.prototype.html</code>，归档在 <code>codex/gomoku-room-ui-prototype</code> 分支。选中 A 后，Windows 发布包才换成侧栏版。</p>
+  </section>
+
+  <section id="session--bug">
+    <h3>复现并修复关窗续局 · <code>diagnosing-bugs</code></h3>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote>
+        <p><code>$diagnosing-bugs</code></p>
+        <ol><li>中途有玩家退出游戏，再返回游戏，不能继续下棋，我没测试观众，需要你自测一下试试</li></ol>
+      </blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · 修复结果摘录</strong>
+      <blockquote>
+        <p>房主保持在线且房间选了「等待重连」时，访客棋手点「退出房间」或关闭窗口后，用原设备和同一 Windows 账户在等待期内重新加入，就能恢复原席、棋盘和轮次。默认等待 30 秒。两种退出方式都实测能继续落子，观众席满时也能回原席。「立即中止」或等待超时会结束本局，房主关窗会解散房间。</p>
+        <p>实测观众退出房间或关窗期间，两名棋手可以继续落子。观众回来后能同步棋盘、看到后续落子，发出的弹幕也正常出现在房主棋盘上。</p>
+      </blockquote>
+    </div>
+    <p class="artifact"><strong>对应产物</strong>　工单 <code>07-disconnect-and-rejoin.md</code> 留下修复和复测结果。后续复盘把关窗退出、重新入房到继续落子的检查纳入仓库，入口是 <code>tests/Windows/smoke.ps1</code> 的 <code>GuestClose</code> 场景。</p>
+  </section>
+
+  <section id="session--retro">
+    <h3>复盘并改进发布流程 · <code>retro</code></h3>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote><code>$retro</code></blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · 建议摘录</strong>
+      <blockquote>
+        <p><strong>高｜把 Windows 回归脚本纳入仓库。</strong> 现有 32 项检查覆盖核心层。关窗重开后能否回原席落子、观众回来后能否看到新落子和发送弹幕，目前靠工作站上的脚本验证。</p>
+        <p><strong>中｜在规格里明确何时开工、如何验收。</strong> 本次有一轮代码在规格确认前写入，随后撤回。用户要求先审方案时，可在现有规格里记录实现是否已获授权。联机行为则用一张表列清访客、房主、观众分别在点退出、关窗、断网时的预期结果。本次续局返工正好涉及这些区别。</p>
+      </blockquote>
+    </div>
+    <div class="message user">
+      <strong class="speaker">用户</strong>
+      <blockquote>开始执行</blockquote>
+    </div>
+    <div class="message">
+      <strong class="speaker">Codex · 落地结果摘录</strong>
+      <blockquote><strong>发布回归已纳入仓库。</strong> <code>scripts/publish.ps1</code> 会在核心检查和真实窗口回归通过后替换发行包，再校验 SHA-256。本次 32 项核心检查和 9 个窗口场景全部通过，最终发行包也复测了关窗续局。</blockquote>
+    </div>
+    <p class="artifact"><strong>对应产物</strong>　<code>.githooks/pre-commit</code> 接入提交检查，<code>scripts/publish.ps1</code> 把验收接进发布，<code>spec.md</code> 补记实施授权及退出行为。发布工单 08 仍保留两项人工验收，两台实体设备的局域网联测，以及未额外安装 .NET 的 Windows 11 启动。</p>
+  </section>
+
+  <footer>
+    <a href="#session">回到会话目录</a> · <a href="#matt-pocock">返回第 05 章跟练</a>
+  </footer>
+</section>
+      <footer><a href="#top">回到教程顶部</a> · <a href="https://github.com/ZeeJune1112/skills-study">查看 GitHub 仓库与 Markdown 原文</a></footer>
+    </main>
+  </div>
+</body>
+</html>
